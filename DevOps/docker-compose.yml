@@ -1,0 +1,74 @@
+version: "3"
+services:
+  zentao:
+    container_name: zentao
+    restart: always
+    tty: true
+    image: a273218159/zentao:10.3.1
+    volumes:
+      - /etc/localtime:/etc/localtime
+    ports:
+      - 70:80
+
+  svn:
+    container_name: svn
+    restart: always
+    image: a273218159/svn
+    volumes:
+      - /etc/localtime:/etc/localtime
+    ports:
+      - 71:80
+
+  jenkins:
+    container_name: jenkins
+    privileged: true
+    restart: always
+    image: a273218159/jenkins
+    environment:
+      - JENKINS_OPTS="--prefix=/jenkins"
+      - JAVA_OPTS="-Duser.timezone=Asia/Shanghai"
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - /usr/local/bin/docker-compose:/usr/local/bin/docker-compose
+      - /usr/lib64/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7
+    ports:
+      - 72:8080
+      - 50000:50000
+      
+pgsql:
+    container_name: pgsql9.6
+    restart: always
+    image: postgres:9.6
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./pgsql9.6:/var/lib/postgresql/data
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - ./mariadb:/var/lib/mysql
+
+  phabricator:
+    container_name: phabricator
+    image: bitnami/phabricator:latest
+    depends_on:
+      - mariadb
+    ports:
+      - 80:80
+    environment:
+      - MARIADB_HOST:mariadb
+      - PHABRICATOR_HOST={domain}
+      - PHABRICATOR_USERNAME=admin
+      - PHABRICATOR_PASSWORD=123456
+      - PHABRICATOR_EMAIL=273218159@qq.com
+    volumes:
+      - ./phabricator:/bitnami
