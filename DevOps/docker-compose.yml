@@ -1,5 +1,21 @@
 version: "3"
 services:
+  wordpress:
+    container_name: wordpress
+    image: wordpress
+    restart: always
+    tty: true
+    environment:
+      - WORDPRESS_DB_HOST=mariadb
+      - WORDPRESS_DB_PASSWORD=
+    depends_on:
+      - mariadb
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./wordpress/:/var/www/html/wp-content/
+    ports:
+      - 73:80
+
   zentao:
     container_name: zentao
     restart: always
