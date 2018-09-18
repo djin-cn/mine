@@ -1,5 +1,19 @@
 version: "3"
 services:
+  nginx:
+    container_name: nginx
+    image: a273218159/nginx:1.15.3
+    restart: always
+    tty: true
+    ports:
+      - 80:80
+      - 443:443
+      - 1935:1935
+    volumes:
+      - /etc/localtime:/etc/localtime
+    networks:
+      - network1
+
   wordpress:
     container_name: wordpress
     image: wordpress
@@ -13,8 +27,8 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime
       - ./wordpress/:/var/www/html/wp-content/
-    ports:
-      - 73:80
+    networks:
+      - network1
 
   zentao:
     container_name: zentao
@@ -25,6 +39,8 @@ services:
       - /etc/localtime:/etc/localtime
     ports:
       - 70:80
+    networks:
+      - network1
 
   svn:
     container_name: svn
@@ -34,10 +50,12 @@ services:
       - /etc/localtime:/etc/localtime
     ports:
       - 71:80
+    networks:
+      - network1
+      
 
   jenkins:
     container_name: jenkins
-    privileged: true
     restart: always
     image: a273218159/jenkins
     environment:
@@ -51,9 +69,12 @@ services:
       - /usr/lib64/libltdl.so.7:/usr/lib/x86_64-linux-gnu/libltdl.so.7
     ports:
       - 72:8080
-      - 50000:50000
-      
-pgsql:
+    networks:
+      - network1
+
+  #可通过以下命令开启慢查询，直接通过command命令指定无效
+  #sed -i 's/#log_min_duration_statement = -1/log_min_duration_statement = 100/g' /var/lib/postgresql/data/postgresql.conf
+  pgsql:
     container_name: pgsql9.6
     restart: always
     image: postgres:9.6
@@ -64,27 +85,38 @@ pgsql:
     volumes:
       - /etc/localtime:/etc/localtime
       - ./pgsql9.6:/var/lib/postgresql/data
+    networks:
+      - network1
 
   mariadb:
     container_name: mariadb
+    restart: always
     image: mariadb:latest
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     volumes:
+      - /etc/localtime:/etc/localtime
       - ./mariadb:/var/lib/mysql
+    networks:
+      - network1
 
   phabricator:
     container_name: phabricator
+    restart: always
     image: bitnami/phabricator:latest
     depends_on:
       - mariadb
-    ports:
-      - 80:80
     environment:
       - MARIADB_HOST:mariadb
-      - PHABRICATOR_HOST={domain}
+      - PHABRICATOR_HOST=phabricator.{domain}
       - PHABRICATOR_USERNAME=admin
       - PHABRICATOR_PASSWORD=123456
       - PHABRICATOR_EMAIL=273218159@qq.com
     volumes:
+      - /etc/localtime:/etc/localtime
       - ./phabricator:/bitnami
+    networks:
+      - network1
+
+networks:
+  network1:
