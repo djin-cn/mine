@@ -1,0 +1,10 @@
+#可作为静态资源的基础镜像
+FROM nginx:1.15.3-alpine
+MAINTAINER djin
+
+RUN rm -f /usr/share/nginx/html/* \
+&& ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
+ONBUILD COPY target/ /usr/share/nginx/html/
+
+EXPOSE 80
