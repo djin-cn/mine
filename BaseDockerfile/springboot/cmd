@@ -1,0 +1,6 @@
+#!/bin/sh  
+java -jar -Duser.timezone=GMT+08 \
+/root/*.jar>/root/run.log 2>&1 \
+&
+
+exec "$@"
