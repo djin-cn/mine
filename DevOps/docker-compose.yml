@@ -72,22 +72,18 @@ services:
     networks:
       - network1
 
-  #可通过以下命令开启慢查询，直接通过command命令指定无效
-  #sed -i 's/#log_min_duration_statement = -1/log_min_duration_statement = 100/g' /var/lib/postgresql/data/postgresql.conf
-  #可通过crontab -e设置定时任务定时备份数据库，以下命令为每天早晨2点备份postgres数据库(需要先创建backup文件夹，可能需要先安装vim命令)：
-  #echo '#!/bin/bash'>/pg_dump.sh
-  #echo 'pg_dump -U postgres -w -d postgres -f /var/lib/postgresql/data/backup/postgres.$(date "+%Y%m%d%H%M%S").sql'>>/pg_dump.sh
-  #* 2 * * * /pg_dump.sh
   #可通过以下命令还原数据库(需要先创建数据库)：
   #psql -U postgres -w -d postgres -f /var/lib/postgresql/data/backup/postgres.?.sql
   pgsql:
     container_name: pgsql9.6
     restart: always
-    image: postgres:9.6
+    image: a273218159/pgsql9.6
     ports:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: 123456
+      #需要备份的数据库
+      DBBACK: postgres
     volumes:
       - /etc/localtime:/etc/localtime
       - ./pgsql9.6:/var/lib/postgresql/data
