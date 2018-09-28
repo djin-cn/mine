@@ -6,6 +6,8 @@ COPY cmd /root/cmd
 COPY localtime /etc/localtime
 #添加ssh支持
 RUN apk add --update openssh \
+#有时需要添加字体支持，安装命令之后，可通过fc-list查看安装字体，字体默认路径:/usr/share/fonts/
+#&& add --update ttf-dejavu \
 && rm -rf /tmp/* /var/cache/apk/* \
 && rm -rf /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_dsa_key \
 && ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa \
