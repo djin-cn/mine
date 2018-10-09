@@ -14,7 +14,7 @@ FROM a273218159/springboot:0
 
 # dockerInstall.sh
 此脚本用来安装Docker-ce和docker-compose，使用方式  
-curl https://github.com/djin-cn/mine/raw/master/DevOps/dockerInstall.sh | sh -s {docker path}  
+curl https://raw.githubusercontent.com/djin-cn/mine/master/DevOps/dockerInstall.sh | sh -s {docker path}  
 {docker path}表示docker容器和镜像的根目录
 
 # DevOps/sdl.sh  
