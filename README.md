@@ -12,7 +12,7 @@ FROM a273218159/springboot:0
 # DevOps/docker-compose.yml
 构建一个全流程的完整的开发环境
 
-# dockerInstall.sh
+# DevOps/dockerInstall.sh
 此脚本用来安装Docker-ce和docker-compose，使用方式  
 curl https://raw.githubusercontent.com/djin-cn/mine/master/DevOps/dockerInstall.sh | sh -s {docker path}  
 {docker path}表示docker容器和镜像的根目录
@@ -21,3 +21,7 @@ curl https://raw.githubusercontent.com/djin-cn/mine/master/DevOps/dockerInstall.
 此脚本用来全量备份/恢复svn库，可用户svn迁移，使用方式  
 1:备份 ./sdl.sh back [svn库根目录]  
 2:还原 ./sdl.sh restore [svn备份目录] [svn库根目录]
+
+# jmeter.sh
+此脚本用来安装Jmeter, 使用前需确保系统已安装jdk/curl/tar命令, 使用方式
+./jmeter.sh {file}.jmx
